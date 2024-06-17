@@ -1,0 +1,65 @@
+name: Create and Upload Terraform Module
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          repository: 'Terraform-Apps/mi-modules'
+          ref: 'main'
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Tarzip Modules Directory
+        run: |
+          cd appName/
+          tar -czf modules-appName.tar.gz .
+
+      - name: Get Module Version
+        id: get_version
+        run: |
+          incrementedVersion=$(cat appName/version.txt)
+          echo "version=$incrementedVersion" >> $GITHUB_ENV
+
+      - name: Create JSON Payload
+        run: |
+          payload=$(cat <<EOF
+          {
+            "data": {
+              "type": "registry-module-versions",
+              "attributes": {
+                "version": "${{ env.version }}"
+              }
+            }
+          }
+          EOF
+          )
+          echo "$payload" > appName/payload.json
+
+      - name: Create Module Version
+        id: create_version
+        run: |
+          apiUrl="https://app.terraform.io/api/v2/organizations/TODO/registry-modules/private/radian/mi-apps-appName/aws/versions"
+          payloadFile="appName/payload.json"
+          
+          response=$(curl --header "Authorization: Bearer ${{ secrets.TERRAFORM_TOKEN }}" \
+                          --header "Content-Type: application/vnd.api+json" \
+                          --request POST \
+                          --data @$payloadFile $apiUrl)
+          
+          echo "$response" > response.json
+          
+          uploadLink=$(jq -r '.data.links.upload' response.json)
+          echo "uploadLink=$uploadLink" >> $GITHUB_ENV
+
+      - name: Upload Tarball
+        run: |
+          uploadLink=${{ env.uploadLink }}
+          curl -X PUT -F "file=@appName/modules-appName.tar.gz" $uploadLink
