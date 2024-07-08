@@ -40,6 +40,4 @@ jobs:
           pwd
 
     - name: Tarzip Modules Directory
-      run: |
-          cd azure/storage_account/
-          tar -czf modules-azure-storage-account.tar.gz .
+      run: tar -czf modules-azure-storage-account.tar.gz azure/storage_account
