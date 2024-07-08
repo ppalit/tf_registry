@@ -34,10 +34,10 @@ jobs:
     #    cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
 
+    - name: Tarzip Modules Directory
+      run: tar -czf modules-azure-storage-account.tar.gz azure/storage_account
+
     - name: pwd
       run: |
           ls -ltr
           pwd
-
-    - name: Tarzip Modules Directory
-      run: tar -czf modules-azure-storage-account.tar.gz azure/storage_account
