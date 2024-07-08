@@ -75,8 +75,8 @@ jobs:
                             --data @$payloadFile $apiUrl)
 
           echo "$response" > response.json
-          echo $response
           uploadLink=$(jq -r '.data.links.upload' response.json)
+          echo $uploadLink
             
           curl -X PUT -F "file=modules-azurerm-storage-account.tar.gz" $uploadLink
 
