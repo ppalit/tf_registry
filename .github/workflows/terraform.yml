@@ -51,3 +51,18 @@ jobs:
     - name: Echo Module Version
       run: echo "${{ env.version }}"
 
+    - name: Create JSON Payload
+      run: |
+          payload=$(cat <<EOF
+          {
+            "data": {
+              "type": "registry-module-versions",
+              "attributes": {
+                "version": "${{ env.version }}"
+              }
+            }
+          }
+          EOF
+          )
+          echo "$payload" > azure/storage_account/payload.json
+
