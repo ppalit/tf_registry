@@ -73,7 +73,7 @@ jobs:
           response=$(curl --header "Authorization: Bearer ${{ secrets.TERRAFORM_API }}" \
                             --header "Content-Type: application/vnd.api+json" \
                             --request POST \
-                            --data $payload $apiUrl)
+                            --data @$payloadFile $apiUrl)
 
           echo "$response" > response.json
           echo $response
