@@ -47,7 +47,7 @@ jobs:
                           --header "Content-Type: application/vnd.api+json" \
                           --request POST \
                           --data azure/storage_account/payload.json \
-                         https://app.terraform.io/api/v2/organizations/my-organization/registry-modules)
+                         https://app.terraform.io/api/v2/organizations/smbcgroup/registry-modules)
           
           echo "$response" > response.json
           
