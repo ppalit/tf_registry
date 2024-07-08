@@ -37,16 +37,13 @@ jobs:
           }
           EOF
           )
-          echo "$payload" > azure/storage_account/payload.json
-
-
-    - name: Create Module Version
-      id: create_version
-      run: |       
+          echo "$payload" > payload.json
+          
+          payloadFile="payload.json"      
           response=$(curl --header "Authorization: Bearer ${{ secrets.TERRAFORM_API }}" \
                           --header "Content-Type: application/vnd.api+json" \
                           --request POST \
-                          --data azure/storage_account/payload.json \
+                          --data @$payloadFile \
                          https://app.terraform.io/api/v2/organizations/smbcgroup/registry-modules)
           
           echo "$response" > response.json
