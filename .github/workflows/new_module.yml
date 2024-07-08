@@ -1,0 +1,40 @@
+name: 'NEW Module'
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Create JSON Payload
+      run: |
+          payload=$(cat <<EOF
+          {
+            "data": {
+                "type": "registry-modules",
+                "attributes": {
+                  "name": "storage-account",
+                  "provider": "aws",
+                  "registry-name": "private",
+                  "no-code": true
+                  }
+            }
+          }
+          EOF
+          )
+          echo "$payload" > azure/storage_account/payload.json
