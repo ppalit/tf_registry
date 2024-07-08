@@ -41,3 +41,9 @@ jobs:
       run: |
           ls -ltr
           pwd
+          
+    - name: Get Module Version
+      id: get_version
+      run: |
+          incrementedVersion=$(cat azure/storage_account/version.txt)
+          echo "version=$incrementedVersion" >> $GITHUB_ENV
