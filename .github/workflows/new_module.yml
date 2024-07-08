@@ -20,6 +20,7 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v4
+      
 
     - name: Create JSON Payload
       run: |
@@ -50,6 +51,9 @@ jobs:
           
           uploadLink=$(jq -r '.data.links.upload' response.json)
           echo "uploadLink=$uploadLink" >> $GITHUB_ENV
+
+    - name: Echo Response
+      run: echo response.json
 
     - name: Echo Module Link
       run: echo "${{ env.uploadLink }}"
