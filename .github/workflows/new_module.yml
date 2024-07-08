@@ -1,4 +1,4 @@
-rmname: 'NEW Module'
+name: 'NEW Module'
 
 # Controls when the workflow will run
 on:
