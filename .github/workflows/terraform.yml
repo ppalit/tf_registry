@@ -64,5 +64,13 @@ jobs:
           }
           EOF
           )
-          echo "$payload" > azure/storage_account/payload.json
+          echo "$payload" > payload.json
+          
+          apiUrl="https://app.terraform.io/api/v2/organizations/smbcgroup/registry-modules/private/smbcgroup/storage-account/azurerm/versions"
+          payloadFile="payload.json"
+
+          response=$(curl --header "Authorization: Bearer ${{ secrets.TERRAFORM_API }}" \
+                            --header "Content-Type: application/vnd.api+json" \
+                            --request POST \
+                            --data @$payloadFile $apiUrl)
 
