@@ -1,0 +1,64 @@
+name: Create and Upload Terraform Module
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          repository: 'Terraform-Apps/mi-modules'
+          ref: 'main'
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      - name: Determine Modified Folders
+        id: determine_folders
+        run: |
+          modified_folders=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep 'version.txt' | xargs -n1 dirname | sort -u)
+          echo "modified_folders=$modified_folders" >> $GITHUB_ENV
+
+      - name: Process Each Modified Folder
+        run: |
+          for appName in ${{ env.modified_folders }}
+          do
+            echo "Processing $appName"
+            
+            cd $appName
+            tar -czf modules-$(basename $appName).tar.gz .
+            
+            incrementedVersion=$(cat version.txt)
+            payload=$(cat <<EOF
+            {
+              "data": {
+                "type": "registry-module-versions",
+                "attributes": {
+                  "version": "${incrementedVersion}"
+                }
+              }
+            }
+            EOF
+            )
+            echo "$payload" > payload.json
+
+            apiUrl="https://app.terraform.io/api/v2/organizations/radian/registry-modules/private/radian/mi-apps-$(basename $appName)/aws/versions"
+            payloadFile="payload.json"
+            
+            response=$(curl --header "Authorization: Bearer ${{ secrets.TERRAFORM_TOKEN }}" \
+                            --header "Content-Type: application/vnd.api+json" \
+                            --request POST \
+                            --data @$payloadFile $apiUrl)
+            
+            echo "$response" > response.json
+            
+            uploadLink=$(jq -r '.data.links.upload' response.json)
+            
+            curl -X PUT -F "file=@modules-$(basename $appName).tar.gz" $uploadLink
+
+            cd -
+          done
