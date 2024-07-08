@@ -78,5 +78,6 @@ jobs:
           uploadLink=$(jq -r '.data.links.upload' response.json)
           echo $uploadLink
             
-          curl -X PUT -F "file=modules-azurerm-storage-account.tar.gz" $uploadLink
+          responseUpload=$(curl -X PUT -F "file=modules-azurerm-storage-account.tar.gz" $uploadLink)
+          echo $responseUpload
 
