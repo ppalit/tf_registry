@@ -38,3 +38,21 @@ jobs:
           EOF
           )
           echo "$payload" > azure/storage_account/payload.json
+
+
+    - name: Create Module Version
+      id: create_version
+      run: |       
+          response=$(curl --header "Authorization: Bearer ${{ secrets.TERRAFORM_TOKEN }}" \
+                          --header "Content-Type: application/vnd.api+json" \
+                          --request POST \
+                          --data azure/storage_account/payload.json \
+                         https://app.terraform.io/api/v2/organizations/my-organization/registry-modules)
+          
+          echo "$response" > response.json
+          
+          uploadLink=$(jq -r '.data.links.upload' response.json)
+          echo "uploadLink=$uploadLink" >> $GITHUB_ENV
+
+    - name: Echo Module Link
+      run: echo "${{ env.uploadLink }}"
