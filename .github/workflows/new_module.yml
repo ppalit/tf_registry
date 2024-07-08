@@ -43,7 +43,7 @@ jobs:
     - name: Create Module Version
       id: create_version
       run: |       
-          response=$(curl --header "Authorization: Bearer ${{ secrets.TERRAFORM_TOKEN }}" \
+          response=$(curl --header "Authorization: Bearer ${{ secrets.TERRAFORM_API }}" \
                           --header "Content-Type: application/vnd.api+json" \
                           --request POST \
                           --data azure/storage_account/payload.json \
