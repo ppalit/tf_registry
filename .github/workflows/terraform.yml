@@ -35,7 +35,7 @@ jobs:
 
 
     - name: Tarzip Modules Directory
-      run: tar -czf modules-azurerm-storage-account.tar.gz azure/storage_account
+      run: tar -czf modules-azurerm-storage-account.tar.gz azure/storage_account/.
 
     - name: pwd
       run: |
@@ -75,6 +75,7 @@ jobs:
                             --data @$payloadFile $apiUrl)
 
           echo "$response" > response.json
+          echo $response
           uploadLink=$(jq -r '.data.links.upload' response.json)
           echo $uploadLink
             
