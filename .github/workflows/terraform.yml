@@ -35,7 +35,7 @@ jobs:
 
 
     - name: Tarzip Modules Directory
-      run: tar -czf modules-azure-storage-account.tar.gz azure/storage_account
+      run: tar -czf modules-azurerm-storage-account.tar.gz azure/storage_account
 
     - name: pwd
       run: |
@@ -73,4 +73,10 @@ jobs:
                             --header "Content-Type: application/vnd.api+json" \
                             --request POST \
                             --data @$payloadFile $apiUrl)
+
+          echo "$response" > response.json
+            
+          uploadLink=$(jq -r '.data.links.upload' response.json)
+            
+          curl -X PUT -F "file=modules-azurerm-storage-account.tar.gz" $uploadLink
 
