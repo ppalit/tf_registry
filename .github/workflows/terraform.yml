@@ -47,3 +47,7 @@ jobs:
       run: |
           incrementedVersion=$(cat azure/storage_account/version.txt)
           echo "version=$incrementedVersion" >> $GITHUB_ENV
+
+    - name: Echo Module Version
+      run: echo "${{ env.version }}"
+
