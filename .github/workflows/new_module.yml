@@ -29,7 +29,7 @@ jobs:
             "data": {
                 "type": "registry-modules",
                 "attributes": {
-                  "name": "storage-account",
+                  "name": "storage-account2",
                   "provider": "azurerm",
                   "registry-name": "private",
                   "no-code": true
@@ -48,12 +48,12 @@ jobs:
                          https://app.terraform.io/api/v2/organizations/smbcgroup/registry-modules)
           
           echo "$response" > response.json
+          echo "$response"
           
           uploadLink=$(jq -r '.data.links.upload' response.json)
           echo "uploadLink=$uploadLink" >> $GITHUB_ENV
+          echo "$uploadLink"
 
-    - name: Echo Response
-      run: echo response.json
 
     - name: Echo Module Link
       run: echo "${{ env.uploadLink }}"
