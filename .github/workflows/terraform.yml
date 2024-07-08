@@ -1,4 +1,4 @@
-name: 'Terraform'
+name: 'Upload_New_Module_Version'
 
 # Controls when the workflow will run
 on:
@@ -67,14 +67,13 @@ jobs:
           EOF
           )
           echo "$payload" > payload.json
-          
-          apiUrl="https://app.terraform.io/api/v2/organizations/smbcgroup/registry-modules/private/smbcgroup/storage-account/azurerm/versions"
+          apiUrl="https://app.terraform.io/api/v2/organizations/smbcgroup/registry-modules/private/smbcgroup/storage-account2/azurerm/versions"
           payloadFile="payload.json"
 
           response=$(curl --header "Authorization: Bearer ${{ secrets.TERRAFORM_API }}" \
                             --header "Content-Type: application/vnd.api+json" \
                             --request POST \
-                            --data @$payloadFile $apiUrl)
+                            --data $payload $apiUrl)
 
           echo "$response" > response.json
           echo $response
