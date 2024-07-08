@@ -1,4 +1,4 @@
-name: 'NEW Module'
+rmname: 'NEW Module'
 
 # Controls when the workflow will run
 on:
@@ -29,7 +29,7 @@ jobs:
                 "type": "registry-modules",
                 "attributes": {
                   "name": "storage-account",
-                  "provider": "aws",
+                  "provider": "azurerm",
                   "registry-name": "private",
                   "no-code": true
                   }
